@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+:root {
+  --pit-bg: #05060c;
+  --pit-panel: #0b0e18;
+  --pit-panel2: #0e1220;
+  --pit-line: #1b2133;
+  --pit-ink: #e8ecf4;
+  --pit-dim: #67708a;
+  --pit-gold: #f5b02e;
+  --pit-blue: #3b82f6;
+  --pit-green: #34d399;
+  --pit-red: #f87171;
+}
+
+html,
+body {
+  background: var(--pit-bg);
+  color: var(--pit-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #232a40 transparent;
+}
+
+::selection {
+  background: #f5b02e44;
+}
+
+/* ---------- ambience ---------- */
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: repeating-linear-gradient(0deg, transparent 0 2px, #00000022 2px 4px);
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  animation: scan-drift 12s linear infinite;
+}
+
+@keyframes scan-drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(24px); }
+}
+
+.tickerbar {
+  background: linear-gradient(90deg, #0b0e18, #101627, #0b0e18);
+}
+
+@keyframes pip {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+.pip {
+  animation: pip 1.6s ease-in-out infinite;
+}
+
+/* agent chatter */
+@keyframes chatline {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chatline {
+  animation: chatline 0.35s ease-out;
+}
+
+/* money pop */
+@keyframes moneypop {
+  0% { transform: scale(0.7); opacity: 0; }
+  40% { transform: scale(1.15); opacity: 1; }
+  70% { transform: scale(1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.moneypop {
+  animation: moneypop 0.5s ease-out;
+}
+
+/* ---------- panels ---------- */
+
+.panel {
+  background: linear-gradient(180deg, #0c101c, #0a0d16);
+  border: 1px solid var(--pit-line);
+  border-radius: 14px;
+}
+
+.panel-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pit-dim);
+}
+
+.btn-gold {
+  background: linear-gradient(180deg, #ffc94d, #e89a12);
+  color: #241703;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  border: 1px solid #f7c25688;
+  transition: transform 0.08s ease, filter 0.15s ease;
+  box-shadow: 0 6px 20px -8px #f5b02e88;
+}
+.btn-gold:hover { filter: brightness(1.08); }
+.btn-gold:active { transform: translateY(1px); }
+.btn-gold:disabled { filter: grayscale(0.6) brightness(0.7); cursor: not-allowed; }
+
+.btn-ghost {
+  border: 1px solid #2a3248;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12px;
+  color: #b8c1d8;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.btn-ghost:hover { border-color: #f5b02e88; color: #ffe9c0; }
+
+/* ---------- numpad ---------- */
+
+.numpad-key {
+  background: #121829;
+  border: 1px solid #232a40;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 0;
+  color: #dfe6f5;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.numpad-key:hover { background: #1a2138; border-color: #3b4568; }
+
+/* ---------- badges ---------- */
+
+.badge {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid #2a3248;
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: #9099b2;
+}
+
+.badge-gold { border-color: #f5b02e66; color: #f5b02e; }
+.badge-green { border-color: #34d39966; color: #34d399; }
+.badge-blue { border-color: #3b82f666; color: #7db4ff; }
+.badge-red { border-color: #f8717166; color: #f87171; }
+
+/* ---------- AG Grid x PayPit theme ---------- */
+
+.ppt-grid {
+  height: 100%;
+  width: 100%;
+}
+
+.ppt-grid .ag-root-wrapper {
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 12.5px;
+  color: #cfd7e9;
+}
+
+.ppt-grid .ag-header {
+  background: #0a0e19;
+  border-bottom: 1px solid #1b2133;
+}
+.ppt-grid .ag-header-cell-text {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7e88a4;
+}
+
+.ppt-grid .ag-row {
+  border-color: #141a2b;
+  background: transparent;
+}
+.ppt-grid .ag-row:hover { background: #101627; }
+.ppt-grid .ag-row-odd { background: #090c15; }
+
+.ppt-grid .ag-cell { display: flex; align-items: center; }
+
+/* PayPal buttons container spacing into dark panel */
+.paypal-slot {
+  min-height: 46px;
+}

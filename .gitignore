@@ -1,0 +1,24 @@
+# deps
+node_modules/
+
+# next
+.next/
+out/
+*.tsbuildinfo
+
+# local world state (demo data)
+data/
+
+# private — never commit
+PRIVATE_NOTES.md
+.env
+.env.local
+.env*.local
+
+# misc
+*.log
+.DS_Store
+
+# tooling
+.freebuff/
+.vercel/
