@@ -45,6 +45,35 @@ Requires Node 18.18+ (built and verified on Node 24).
    with the rail and reference id for each row.
 5. **Settlement Wire**. Fire the API calls yourself and watch the sandbox traffic come back.
 
+## Deploy
+
+**PayPit must run as one long-lived process.** The world is in-process state advanced by a
+2.8s timer and pushed to the browser over one SSE stream — it needs a host that keeps a Node
+server running, and exactly one instance of it. Serverless platforms (Vercel, Netlify
+Functions, Lambda) will *build and serve the page fine and then never trade*: each request can
+get a fresh isolate with an empty world, background timers are killed when the response ends,
+and nothing is shared between invocations.
+
+**Render (one click, blueprint included).** Create an empty repo from this project, then in
+Render choose *New → Blueprint* and point it at the repo — [`render.yaml`](render.yaml)
+provisions a single always-on web service, `npm ci && npm run build`, `npm start`, with the
+PayPal and LLM variables declared for you to fill in.
+
+**Any container host.** A [`Dockerfile`](Dockerfile) is included, so Fly.io, Railway, Koyeb,
+Cloud Run (pin `--max-instances=1`), Northflank or your own box all work:
+
+```bash
+docker build -t paypit . && docker run -p 3000:3000 --env-file .env.local paypit
+```
+
+Set `PAYPAL_*` and `LLM_*` in the host's dashboard — never in the repo. `npm start` honours
+`$PORT`, so platforms that inject one need no extra configuration.
+
+Two caveats. Free tiers stop idle services, and since the world lives in memory it reseeds
+itself on the next request (the pit restarts live, it doesn't break). And `data/world.json`
+sits on the container's ephemeral disk, so it is lost on redeploy by design — the demo never
+depends on it.
+
 ## Configuration
 
 Copy the variables you need into `.env.local` (never committed):
@@ -119,7 +148,8 @@ snapshots, so every panel — wallets, transcript, ledger, tape — stays in syn
 
 - **No real money.** Sandbox only — the floor settles with test funds and simulated wallets.
 - The world is single-process and unauthenticated: it is a demo economy, not a multi-tenant
-  service. Don't expose it as one.
+  service. Don't expose it as one — and never run more than one instance, or each replica
+  becomes its own parallel floor.
 - Demo mode is not a mock-up: the calls are not sent to PayPal, but they are real calls in the
   code path, and they land in the wire log exactly as the sandbox ones do.
 

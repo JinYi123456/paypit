@@ -1,0 +1,32 @@
+# Render blueprint — connect this repo and Render provisions the floor.
+# https://render.com/docs/blueprint-spec
+#
+# One instance, always. The world is in-process state advanced by a timer:
+# extra instances would each run their own divergent floor, and free-tier
+# spin-down resets it (the pit reseeds itself on the next request).
+
+services:
+  - type: web
+    name: paypit
+    runtime: node
+    plan: free
+    numInstances: 1
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/roster
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # PayPal sandbox: set these in the Render dashboard (never in the repo).
+      # Leave them unset to run the floor in audited demo mode.
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_MERCHANT_EMAIL
+        sync: false
+      # Live agent brains (any OpenAI-compatible endpoint). Optional.
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: LLM_API_KEY
+        sync: false
